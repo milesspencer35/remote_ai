@@ -4,6 +4,7 @@ import platform
 import subprocess
 import keyboard
 import time
+import math
 
 from pynput.keyboard import Controller, Key
 
@@ -92,21 +93,31 @@ def volume_down():
     system_volume.decrease()
 
 @remote_toolbox.tool
-def skip_forward():
+def skip_forward(seconds: int = 5):
     """
-    Call this function to skip forward 5 seconds
+    Skip forward in the YouTube video. Use this when the user wants to fast forward or skip ahead.
+    
+    Args:
+        seconds: Number of seconds to skip forward (default: 5)
     """
-    print("Called skip forward")
+    print(f"Called skip forward {seconds} seconds")
     focus_youtube_window()
-    keyboard.press(Key.right)
-    keyboard.release(Key.right)
+    num_of_skips = math.floor(seconds / 5)
+    for _ in range(num_of_skips):
+        keyboard.press(Key.right)
+        keyboard.release(Key.right)
 
 @remote_toolbox.tool
-def skip_back():
+def skip_back(seconds: int = 5):
     """
-    Call this function to skip back 5 seconds
+    Skip backward in the YouTube video. Use this when the user wants to rewind or go back.
+    
+    Args:
+        seconds: Number of seconds to skip backward (default: 5)
     """
-    print("Called skip back")
+    print(f"Called skip back {seconds} seconds")
     focus_youtube_window()
-    keyboard.press(Key.left)
-    keyboard.release(Key.left)
+    num_of_skips = math.floor(seconds / 5)
+    for _ in range(num_of_skips):
+        keyboard.press(Key.left)    
+        keyboard.release(Key.left)
