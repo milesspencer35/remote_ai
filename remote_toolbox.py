@@ -1,20 +1,63 @@
 from tools import ToolBox
+from system_volume import SystemVolume
+import platform
+import subprocess
+import keyboard
+import time
+
+from pynput.keyboard import Controller, Key
+
+keyboard = Controller()
 
 remote_toolbox = ToolBox()
+system_volume = SystemVolume()
+
+def get_platform():
+    return platform.system()  # Returns 'Darwin' for Mac, 'Windows' for Windows
+
+def focus_youtube_window():
+    """Bring YouTube browser window to focus"""
+    system = platform.system()
+    
+    if system == 'Darwin':  # macOS
+        # AppleScript to find and focus window with "YouTube" in title
+        script = '''
+        tell application "System Events"
+            set frontmost of first process whose name contains "Chrome" or name contains "Safari" or name contains "Firefox" to true
+        end tell
+        '''
+        subprocess.run(['osascript', '-e', script])
+        time.sleep(0.2)  # Small delay to ensure window is focused
+        
+    elif system == 'Windows':
+        import pygetwindow as gw
+        
+        # Find window with "YouTube" in title
+        youtube_windows = gw.getWindowsWithTitle('YouTube')
+        
+        if youtube_windows:
+            youtube_windows[0].activate()
+            time.sleep(0.2)
+        else:
+            # Try to find any browser window
+            browsers = ['Chrome', 'Firefox', 'Edge', 'Safari']
+            for browser in browsers:
+                windows = gw.getWindowsWithTitle(browser)
+                if windows:
+                    windows[0].activate()
+                    time.sleep(0.2)
+                    break
+
 
 @remote_toolbox.tool
-def volume_up():
+def play():
     """
-    Call this function to increase the volume
+    Call this function to play the video
     """
-    print("Called volume up")
-
-@remote_toolbox.tool
-def volume_down():
-    """
-    Call this function to decrease the volume
-    """
-    print("Called volume down")
+    print("Called play")
+    focus_youtube_window()
+    keyboard.press('k')
+    keyboard.release('k')
 
 @remote_toolbox.tool
 def pause():
@@ -22,3 +65,48 @@ def pause():
     Call this function to pause the video
     """
     print("Called pause")
+    play()
+
+@remote_toolbox.tool
+def mute_unmute():
+    """
+    Call this function to mute or unmute the video
+    """
+    print("Called mute/unmute")
+    system_volume.toggle_mute()
+
+@remote_toolbox.tool
+def volume_up():
+    """
+    Call this function to increase the volume
+    """
+    print("Called volume up")
+    system_volume.increase()
+
+@remote_toolbox.tool
+def volume_down():
+    """
+    Call this function to decrease the volume
+    """
+    print("Called volume down")
+    system_volume.decrease()
+
+@remote_toolbox.tool
+def skip_forward():
+    """
+    Call this function to skip forward 5 seconds
+    """
+    print("Called skip forward")
+    focus_youtube_window()
+    keyboard.press(Key.right)
+    keyboard.release(Key.right)
+
+@remote_toolbox.tool
+def skip_back():
+    """
+    Call this function to skip back 5 seconds
+    """
+    print("Called skip back")
+    focus_youtube_window()
+    keyboard.press(Key.left)
+    keyboard.release(Key.left)
