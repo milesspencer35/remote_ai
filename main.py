@@ -3,7 +3,7 @@ from remote_agent import RemoteAgent
 
 async def main():
     agent = RemoteAgent()
-    await agent.evaluate("Mute the video and then skip forward 30 seconds")
+    await agent.evaluate("Play the video, go back 30 seconds, and turn the volume up a lot")
 
 
 if __name__ == "__main__":

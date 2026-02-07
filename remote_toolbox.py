@@ -77,20 +77,28 @@ def mute_unmute():
     system_volume.toggle_mute()
 
 @remote_toolbox.tool
-def volume_up():
+def volume_up(amount: int = 1):
     """
-    Call this function to increase the volume
+    Increase the volume
+    
+    Args:
+        amount: Amount to increase the volume by (default: 1)
     """
-    print("Called volume up")
-    system_volume.increase()
+    print(f"Called volume up, {amount}")
+    for _ in range(amount):
+        system_volume.increase()
 
 @remote_toolbox.tool
-def volume_down():
+def volume_down(amount: int = 1):
     """
-    Call this function to decrease the volume
+    Decrease the volume
+
+    Args:
+        amount: Amount to decrease the volume by (default: 1)
     """
-    print("Called volume down")
-    system_volume.decrease()
+    print(f"Called volume down, {amount}")
+    for _ in range(amount):
+        system_volume.decrease()
 
 @remote_toolbox.tool
 def skip_forward(seconds: int = 5):
